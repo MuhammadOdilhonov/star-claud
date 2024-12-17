@@ -22,6 +22,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "686433fc-4072-45d0-90d3-1b4d33a6826c"
+      }
+    },
+    "owner": "muhammad_04_12_06"
   }
 }
