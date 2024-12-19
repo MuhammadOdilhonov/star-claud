@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import DailyRevenueHoursChart from '../DailyRevenueHoursChart/DailyRevenueHoursChart';
 import RentalPercentageStatisticsChart from '../RentalPercentageStatisticsChart/RentalPercentageStatisticsChart';
@@ -8,23 +8,26 @@ import { useNavigation } from '@react-navigation/native';
 
 export default function Statistics() {
     const navigation = useNavigation();
-    const [selectedPeriod, setSelectedPeriod] = useState("Kunlik"); // Default time period
-    const [selectedYear, setSelectedYear] = useState(null); // Default selected year
-    const [DataYear, setDataYear] = useState(null); // Default selected year
+    const [selectedPeriod, setSelectedPeriod] = useState("Kunlik");
+    const [selectedYear, setSelectedYear] = useState(null);
+    const [DataYear, setDataYear] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // Data o'zgarsa birinchi yilni avtomatik tanlash
     useEffect(() => {
-        if (selectedPeriod === 'Yillik' && DataStatistics.Income.yearlyData.datayearly.length > 0) {
-            const firstYearData = DataStatistics.Income.yearlyData.datayearly[0];
-            setSelectedYear(firstYearData.year);
-            setDataYear(firstYearData);
-
-        }
+        setTimeout(() => {
+            if (selectedPeriod === 'Yillik' && DataStatistics.Income.yearlyData.datayearly.length > 0) {
+                const firstYearData = DataStatistics.Income.yearlyData.datayearly[0];
+                setSelectedYear(firstYearData.year);
+                setDataYear(firstYearData);
+            }
+            setLoading(false);
+        }, 1000);
     }, [selectedPeriod]);
 
     const handleTimePeriodSelect = (period) => {
         setSelectedPeriod(period);
-        setSelectedYear(null); // Clear selected year when period changes
+        setSelectedYear(null);
+        setLoading(true);
     };
 
     const handleYearSelect = (yearData) => {
@@ -46,29 +49,29 @@ export default function Statistics() {
                 labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"],
                 revenue: [1200000, 1500000, 1300000, 1400000, 1600000, 1500000, 1700000, 1500000, 1300000, 1400000, 1200000, 1500000, 1300000, 1400000, 1600000, 1500000, 1700000, 1500000, 1300000, 1400000, 1200000, 1500000, 1300000, 1400000, 1600000, 1500000, 1700000, 1500000, 1300000, 1400000, 1400000],
             },
-            yearlyData: { 
+            yearlyData: {
                 datayearly: [
                     {
                         year: "2021",
                         status: "Stable",
                         months: {
-                            labels :["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",],
-                            revenue : [15000000, 17000000, 18000000, 19000000, 20000000, 15000000, 17000000, 18000000, 19000000, 20000000, 19000000, 20000000],
-                    },
+                            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",],
+                            revenue: [15000000, 17000000, 18000000, 19000000, 20000000, 15000000, 17000000, 18000000, 19000000, 20000000, 19000000, 20000000],
+                        },
                     },
                     {
                         year: "2022",
                         status: "Stable",
                         months: {
-                            labels :["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",],
+                            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",],
                             revenue: [17000000, 15000000, 18000000, 19000000, 20000000, 15000000, 17000000, 18000000, 19000000, 20000000, 19000000, 20000000],
-                    },
+                        },
                     },
                     {
                         year: "2023",
                         status: "Stable",
                         months: {
-                            labels : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",],
+                            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",],
                             revenue: [19000000, 17000000, 18000000, 15000000, 20000000, 15000000, 17000000, 18000000, 19000000, 20000000, 19000000, 20000000],
                         },
                     },
@@ -76,7 +79,7 @@ export default function Statistics() {
                         year: "2024",
                         status: "Stable",
                         months: {
-                            labels : ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",],
+                            labels: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",],
                             revenue: [20000000, 17000000, 18000000, 19000000, 15000000, 15000000, 17000000, 18000000, 19000000, 20000000, 19000000, 20000000],
                         },
                     },
@@ -168,7 +171,6 @@ export default function Statistics() {
 
     return (
         <ScrollView style={styles.container}>
-            {/* Header */}
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => navigation.navigate('Account')}>
                     <Icon name="arrow-back-outline" size={26} color="#000" />
@@ -176,88 +178,71 @@ export default function Statistics() {
                 <Text style={styles.headerTitle}>Kunlik, Haftalik, Oylik, Yillik Hisobot</Text>
             </View>
 
-            {/* Time Period Buttons */}
             <View style={styles.timePeriodContainer}>
                 <TimePeriodButton title="Kunlik" selected={selectedPeriod === 'Kunlik'} onPress={() => handleTimePeriodSelect('Kunlik')} />
                 <TimePeriodButton title="Haftalik" selected={selectedPeriod === 'Haftalik'} onPress={() => handleTimePeriodSelect('Haftalik')} />
                 <TimePeriodButton title="Oylik" selected={selectedPeriod === 'Oylik'} onPress={() => handleTimePeriodSelect('Oylik')} />
                 <TimePeriodButton title="Yillik" selected={selectedPeriod === 'Yillik'} onPress={() => handleTimePeriodSelect('Yillik')} />
             </View>
-            {selectedPeriod === 'Yillik' && (
-                <View style={styles.timePeriodContainer}>
-                    {DataStatistics.Income.yearlyData.datayearly.map((yearData, index) => (
-                        <TouchableOpacity
-                            key={index}
-                            style={[
-                                styles.timeButton,
-                                selectedYear === yearData.year && styles.selectedButton,
-                            ]}
-                            onPress={() => handleYearSelect(yearData)}
-                        >
-                            <Text style={[styles.timeButtonText, selectedYear === yearData.year && styles.selectedButtonText]}>{yearData.year}</Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
-            )}
 
-            {/* Charts */}
-            {selectedPeriod === 'Kunlik' && (
+            {loading ? (
+                <ActivityIndicator size="large" color="#0000ff" style={styles.loadingIndicator} />
+            ) : (
                 <>
-                    <DailyRevenueHoursChart data={DataStatistics.Income.dailyData} />
-                    <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.DailyRentalData} />
-                    <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.DailyEmployeeData} />
-                </>
-            )}
+                    {selectedPeriod === 'Yillik' && (
+                        <View style={styles.timePeriodContainer}>
+                            {DataStatistics.Income.yearlyData.datayearly.map((yearData, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    style={[
+                                        styles.timeButton,
+                                        selectedYear === yearData.year && styles.selectedButton,
+                                    ]}
+                                    onPress={() => handleYearSelect(yearData)}
+                                >
+                                    <Text style={[styles.timeButtonText, selectedYear === yearData.year && styles.selectedButtonText]}>{yearData.year}</Text>
+                                </TouchableOpacity>
+                            ))}
+                        </View>
+                    )}
 
-            {selectedPeriod === 'Haftalik' && (
-                <>
-                    <DailyRevenueHoursChart data={DataStatistics.Income.weeklyData} />
-                    <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.WeeklyRentalData} />
-                    <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.MonthlyEmployeeData} />
-                </>
-            )}
+                    {selectedPeriod === 'Kunlik' && (
+                        <>
+                            <DailyRevenueHoursChart data={DataStatistics.Income.dailyData} />
+                            <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.DailyRentalData} />
+                            <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.DailyEmployeeData} />
+                        </>
+                    )}
 
-            {selectedPeriod === 'Oylik' && (
-                <>
-                    <DailyRevenueHoursChart data={DataStatistics.Income.monthlyData} />
-                    <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.MonthlyRentalData} />
-                    <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.WeeklyEmployeeData} />
-                </>
-            )}
+                    {selectedPeriod === 'Haftalik' && (
+                        <>
+                            <DailyRevenueHoursChart data={DataStatistics.Income.weeklyData} />
+                            <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.WeeklyRentalData} />
+                            <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.MonthlyEmployeeData} />
+                        </>
+                    )}
 
-            { selectedYear == 2021 && (
-                <>
-                    <DailyRevenueHoursChart data={DataYear.months} />
-                    <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.YearlyRentalData} />
-                    <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.YearlyEmployeeData} />
-                </>
-            )}
-            {selectedYear == 2022 && (
-                <>
-                    <DailyRevenueHoursChart data={DataYear.months} />
-                    <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.YearlyRentalData} />
-                    <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.YearlyEmployeeData} />
-                </>
-            )}
-            {selectedYear == 2023 && (
-                <>
-                    <DailyRevenueHoursChart data={DataYear.months} />
-                    <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.YearlyRentalData} />
-                    <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.YearlyEmployeeData} />
-                </>
-            )}
-            {selectedYear == 2024 && (
-                <>
-                    <DailyRevenueHoursChart data={DataYear.months} />
-                    <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.YearlyRentalData} />
-                    <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.YearlyEmployeeData} />
+                    {selectedPeriod === 'Oylik' && (
+                        <>
+                            <DailyRevenueHoursChart data={DataStatistics.Income.monthlyData} />
+                            <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.MonthlyRentalData} />
+                            <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.WeeklyEmployeeData} />
+                        </>
+                    )}
+
+                    {selectedYear && (
+                        <>
+                            <DailyRevenueHoursChart data={DataYear.months} />
+                            <RentalPercentageStatisticsChart data={DataStatistics.RentalNumber.YearlyRentalData} />
+                            <EmployeeDailySalesChart data={DataStatistics.SalesOfWorkers.YearlyEmployeeData} />
+                        </>
+                    )}
                 </>
             )}
         </ScrollView>
     );
 }
 
-// Time Period Button Component
 const TimePeriodButton = ({ title, selected, onPress }) => (
     <TouchableOpacity style={[styles.timeButton, selected && styles.selectedButton]} onPress={onPress}>
         <Text style={[styles.timeButtonText, selected && styles.selectedButtonText]}>{title}</Text>
@@ -305,5 +290,8 @@ const styles = StyleSheet.create({
     },
     selectedButtonText: {
         color: '#fff',
+    },
+    loadingIndicator: {
+        marginTop: 20,
     },
 });

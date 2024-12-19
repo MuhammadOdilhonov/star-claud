@@ -17,6 +17,7 @@ import ProductInventory from './components/ProductInventory/ProductInventory';
 import WorkersList from './components/WorkersList/WorkersList';
 import Details from './components/Details/Details';
 import ViewAndAddCategory from './components/ViewAndAddCategory/ViewAndAddCategory';
+import VideoTutorial from './components/VideoTutorial/VideoTutorial';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ export default function App() {
         <Stack.Screen name='WorkersList' component={WorkersList} />
         <Stack.Screen name='Details' component={Details} />
         <Stack.Screen name='ViewAndAddCategory' component={ViewAndAddCategory} />
+        <Stack.Screen name='VideoTutorial' component={VideoTutorial} />
 
 
 

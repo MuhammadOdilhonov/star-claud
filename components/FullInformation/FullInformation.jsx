@@ -12,13 +12,20 @@ export default function FullInformation({ navigation, route }) {
         if (route.params && route.params.id) {
             ProductApi.GetProductId(route.params.id)
                 .then((res) => {
-                    setProduct(res);
+                    if (res) {
+                        setProduct(res);
+                    } else {
+                        console.error("Product not found");
+                    }
                     setLoading(false);
                 })
                 .catch((error) => {
                     console.error("Error fetching product:", error);
                     setLoading(false);
                 });
+        } else {
+            console.error("Invalid route parameters");
+            setLoading(false);
         }
     }, [route.params]);
 
@@ -38,7 +45,7 @@ export default function FullInformation({ navigation, route }) {
         );
     }
 
-    if (!product) {
+    if (!product && !loading) {
         return (
             <View style={styles.errorContainer}>
                 <Text style={styles.errorText}>Mahsulot ma'lumotlari yuklanmadi!</Text>
@@ -164,7 +171,7 @@ const styles = StyleSheet.create({
     infoContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        flexWrap:"wrap",
+        flexWrap: "wrap",
         width: '80%',
         marginBottom: 5,
     },
@@ -196,7 +203,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     button: {
-        width:"100%",
+        width: "100%",
         paddingVertical: 10,
         borderRadius: 8,
     },
@@ -207,7 +214,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFCC00', // Yellow button
     },
     buttonText: {
-        textAlign:"center",
+        textAlign: "center",
         fontSize: 18,
         color: '#fff',
         fontWeight: 'bold',

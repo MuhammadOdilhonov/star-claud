@@ -44,9 +44,15 @@ export default function Account() {
     };
 
     // Menyu tugmasi
-    const MenuButton = ({ title, onPress }) => (
-        <TouchableOpacity style={styles.button} onPress={onPress}>
-            <Text style={styles.buttonText}>{title}</Text>
+    const MenuButton = ({ title, iconName, isHighlighted, onPress }) => (
+        <TouchableOpacity
+            style={[styles.button, isHighlighted && styles.highlightedButton]}
+            onPress={onPress}
+        >
+            <View style={styles.buttonContent}>
+                {iconName && <Icon name={iconName} size={20} color={isHighlighted ? "#007BFF" : "#333"} style={styles.buttonIcon} />}
+                <Text style={[styles.buttonText, isHighlighted && styles.highlightedButtonText]}>{title}</Text>
+            </View>
             <Icon name="chevron-forward-outline" size={20} color="#333" />
         </TouchableOpacity>
     );
@@ -80,6 +86,12 @@ export default function Account() {
                     <MenuButton title="Mahsulotlar" onPress={() => navigation.navigate('ProductInventory')} />
                     <MenuButton title="Xodimlar" onPress={() => navigation.navigate('WorkersList')} />
                     <MenuButton title="Sozlamalar" onPress={() => navigation.navigate('UserProfile')} />
+                    <MenuButton
+                        title="Video qo`llanma"
+                        iconName="videocam-outline"
+                        isHighlighted
+                        onPress={() => navigation.navigate('VideoTutorial')}
+                    />
                     <MenuButton title="Tarif" />
                     <MenuButton title="Biz bilan bog'lanish" />
                     <LogoutButton />
@@ -95,6 +107,12 @@ export default function Account() {
                     <MenuButton title="Mahsulotlar" onPress={() => navigation.navigate('ProductInventory')} />
                     <MenuButton title="Xodimlar" onPress={() => navigation.navigate('WorkersList')} />
                     <MenuButton title="Sozlamalar" onPress={() => navigation.navigate('UserProfile')} />
+                    <MenuButton
+                        title="Video qo`llanma"
+                        iconName="videocam-outline"
+                        isHighlighted
+                        onPress={() => navigation.navigate('VideoTutorial')}
+                    />
                     <MenuButton title="Tarif" />
                     <MenuButton title="Biz bilan bog'lanish" />
                     <LogoutButton />
@@ -106,6 +124,12 @@ export default function Account() {
                     <MenuButton title="Hisobot" onPress={() => navigation.navigate('MonthlyKipay')} />
                     <MenuButton title="Arendaga berilganlar" onPress={() => navigation.navigate('RentedItems')} />
                     <MenuButton title="Sozlamalar" onPress={() => navigation.navigate('UserProfile')} />
+                    <MenuButton
+                        title="Video qo`llanma"
+                        iconName="videocam-outline"
+                        isHighlighted
+                        onPress={() => navigation.navigate('VideoTutorial')}
+                    />
                     <LogoutButton />
                 </ScrollView>
             );
@@ -182,9 +206,24 @@ const styles = StyleSheet.create({
         shadowRadius: 3,
         elevation: 3,
     },
+    buttonContent: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    buttonIcon: {
+        marginRight: 10,
+    },
     buttonText: {
         fontSize: 16,
         color: '#333',
+    },
+    highlightedButton: {
+        borderColor: '#007BFF',
+        backgroundColor: '#E6F0FF',
+    },
+    highlightedButtonText: {
+        color: '#007BFF',
+        fontWeight: 'bold',
     },
     logoutButton: {
         flexDirection: 'row',

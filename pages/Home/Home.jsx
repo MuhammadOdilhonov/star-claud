@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Image, FlatList, RefreshControl, Text } from 'react-native';
+import { View, StyleSheet, Image, FlatList, RefreshControl, Text, Alert } from 'react-native';
 import Card from '../../components/CardHome/CardHome';
 import Category from '../../components/Category/Category';
 import categoryApi from '../../api/apiCollection/categoryApi';
@@ -68,6 +68,11 @@ export default function Home() {
         setIsRefreshing(false);
     };
 
+    function onDelete() {
+        Alert.alert("Afsuski buyerdan o`chirib bo`lmaydi!")
+    }
+
+
     const renderContent = () => {
         if (apiError) {
             // API xatosi bo'lganida xabar
@@ -99,7 +104,7 @@ export default function Home() {
         return (
             <FlatList
                 data={dataProducts}
-                renderItem={({ item }) => <Card data={item} />}
+                renderItem={({ item }) => <Card data={item} onDelete={onDelete} />}
                 keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.cardList}

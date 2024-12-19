@@ -22,22 +22,25 @@ export default function AddProduct() {
     const [rentalOption, setRentalOption] = useState("RENT"); // True for "arendaga beriladi"
 
     useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                setLoading(true); // Loading holatini boshqarish
+                const response = await categoryApi.Category();
+                const categoryOptions = response.data.results.map((category) => ({
+                    label: category.name,
+                    value: category.id,
+                }));
+                setCategories(categoryOptions);
+            } catch (error) {
+                console.error("Kategoriyalarni olishda xato:", error);
+                Alert.alert("Xato", "Kategoriyalarni olishda xatolik yuz berdi.");
+            } finally {
+                setLoading(false); // Loading holatini to'g'ri boshqarish
+            }
+        };
+
         fetchCategories();
     }, []);
-
-    const fetchCategories = async () => {
-        try {
-            const response = await categoryApi.Category();
-            const categoryOptions = response.data.results.map((category) => ({
-                label: category.name,
-                value: category.id,
-            }));
-            setCategories(categoryOptions);
-        } catch (error) {
-            console.error("Kategoriyalarni olishda xato:", error);
-            Alert.alert("Xato", "Kategoriyalarni olishda xatolik yuz berdi.");
-        }
-    };
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
